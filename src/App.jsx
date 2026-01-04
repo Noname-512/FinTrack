@@ -46,13 +46,18 @@ function App() {
   const handleLogout = () => signOut(auth);
 
   const updateBudget = async (val) => {
-  // Allow the state to be empty while the user is typing
+  // 1. Allow the UI state to change (even to an empty string) so you can erase it
   setMonthlyBudget(val); 
 
   const num = parseFloat(val);
-  // Only sync with Firebase if it's a valid, non-negative number
-  if (user && !isNaN(num) && num >= 0) {
-    await setDoc(doc(db, 'users', user.uid), { budget: num }, { merge: true });
+
+  // 2. Validation: Only save to Firebase if it is a valid number AND greater than 0
+  if (user && !isNaN(num) && num > 0) {
+    try {
+      await setDoc(doc(db, 'users', user.uid), { budget: num }, { merge: true });
+    } catch (e) {
+      console.error("Error saving budget:", e);
+    }
   }
 };
 
