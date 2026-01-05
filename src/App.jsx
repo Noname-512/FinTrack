@@ -285,6 +285,7 @@ function App() {
             </div>
           ))}
         </div>
+      </div>
       </main>
     </div>
   );
