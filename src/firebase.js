@@ -4,7 +4,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDNKvqx95B_tVtsd8bEWMdfWD8eALu-X0k",
-  authDomain: "fin-track-bay.vercel.app",
+  authDomain: "studentbudget-66dcc.firebaseapp.com",
   projectId: "studentbudget-66dcc",
   storageBucket: "studentbudget-66dcc.firebasestorage.app",
   messagingSenderId: "398984222542",
@@ -19,3 +19,4 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 export const provider = new GoogleAuthProvider();
+
