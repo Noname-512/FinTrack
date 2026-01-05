@@ -5,6 +5,7 @@ import {
   collection, addDoc, query, where, onSnapshot, 
   orderBy, serverTimestamp, doc, deleteDoc, updateDoc, setDoc 
 } from 'firebase/firestore';
+// Added TrendingUp and TrendingDown back to imports
 import { LogOut, Wallet, Trash2, Settings, Edit2, TrendingUp, TrendingDown, Plus, X } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -28,13 +29,10 @@ function App() {
       setUser(currentUser);
       setLoading(false);
       if (currentUser) {
-        // Fetch User Budget
         const budgetRef = doc(db, 'users', currentUser.uid);
         onSnapshot(budgetRef, (docSnap) => {
           if (docSnap.exists()) setMonthlyBudget(docSnap.data().budget || 10000);
         });
-
-        // Fetch Expenses
         const q = query(collection(db, 'expenses'), where('uid', '==', currentUser.uid), orderBy('createdAt', 'desc'));
         const unsubscribeData = onSnapshot(q, (snapshot) => {
           setExpenses(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
@@ -45,8 +43,8 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = async () => { try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); } };
   const handleLogout = () => signOut(auth);
+  const handleLogin = async () => { try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); } };
 
   const updateBudget = async (val) => {
     setMonthlyBudget(val);
@@ -110,7 +108,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-[#f8fafc] text-slate-900">
+    <div className="min-h-screen w-full flex flex-col bg-white text-slate-900">
       <header className="sticky top-0 z-50 w-full px-6 sm:px-12 py-5 backdrop-blur-lg bg-white/70 border-b border-gray-100 flex justify-between items-center shadow-sm">
         <h1 className="text-3xl font-black text-blue-600 flex items-center gap-3 tracking-tighter">
           <Wallet size={32} /> FinTrack
@@ -125,13 +123,19 @@ function App() {
 
       <main className="flex-1 w-full px-6 sm:px-12 py-10 space-y-10">
         <div className="flex flex-col xl:flex-row gap-8">
-          <div className={`relative overflow-hidden flex-1 p-12 rounded-[4rem] text-white shadow-2xl transition-all duration-700 ${percentageUsed > 85 ? 'bg-rose-500' : 'bg-blue-600'}`}>
+          {/* CARD WITH DYNAMIC ARROW FEATURE */}
+          <div className={`relative overflow-hidden flex-1 p-12 rounded-[4rem] text-white shadow-2xl transition-all duration-700 ${percentageUsed > 80 ? 'bg-rose-500' : 'bg-blue-600'}`}>
             <p className="text-xs font-bold uppercase tracking-[0.4em] opacity-70 mb-4">Expenditure vs Remaining</p>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
               <h2 className="text-7xl sm:text-8xl font-black tracking-tighter">₹{totalSpent.toLocaleString()}</h2>
-              <div className="bg-white/10 backdrop-blur-md p-6 rounded-[2rem] border border-white/20 min-w-[200px]">
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-70 mb-1">Remaining Balance</p>
-                <p className="text-3xl font-black">₹{remainingBalance.toLocaleString()}</p>
+              
+              {/* ARROW FEATURE: Icon changes based on spending status */}
+              <div className="flex flex-col items-center gap-2">
+                 {percentageUsed > 80 ? <TrendingUp size={48} className="animate-bounce" /> : <TrendingDown size={48} />}
+                 <div className="bg-white/10 backdrop-blur-md p-6 rounded-[2rem] border border-white/20 min-w-[200px]">
+                    <p className="text-[10px] font-black uppercase tracking-widest opacity-70 mb-1">Remaining Balance</p>
+                    <p className="text-3xl font-black">₹{remainingBalance.toLocaleString()}</p>
+                 </div>
               </div>
             </div>
             <div className="w-full bg-white/20 rounded-full h-5 p-1">
@@ -201,24 +205,6 @@ function App() {
               )}
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-6 pb-20">
-          {expenses.map(exp => (
-            <div key={exp.id} className="bg-white p-8 rounded-[3rem] shadow-md flex justify-between items-center group border border-transparent hover:border-blue-100 transition-all">
-              <div className="flex items-center gap-5">
-                <div className={`w-3 h-3 rounded-full ${exp.isNeed ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-                <div>
-                  <p className="font-black text-xl text-gray-800 tracking-tighter">{exp.category}</p>
-                  <p className="text-[10px] font-bold text-gray-300 uppercase">{exp.createdAt?.toDate().toLocaleDateString() || '...'}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <p className="font-black text-2xl tracking-tighter">₹{exp.amount}</p>
-                <button onClick={() => deleteExpense(exp.id)} className="text-gray-200 hover:text-rose-500 transition-colors cursor-pointer"><Trash2 size={20}/></button>
-              </div>
-            </div>
-          ))}
         </div>
       </main>
     </div>
