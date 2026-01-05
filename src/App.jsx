@@ -45,7 +45,6 @@ function App() {
   const handleLogout = () => signOut(auth);
   const handleLogin = async () => { try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); } };
 
-  // Sync budget only if value is 1 or greater
   const updateBudget = async (val) => {
     setMonthlyBudget(val);
     const num = parseFloat(val);
@@ -94,6 +93,7 @@ function App() {
 
   const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
   const remainingBalance = (parseFloat(monthlyBudget) || 0) - totalSpent;
+  // RESTORED: Percentage logic
   const percentageUsed = monthlyBudget > 0 ? (totalSpent / monthlyBudget) * 100 : 0;
   
   const chartData = [
@@ -113,7 +113,7 @@ function App() {
           </div>
           <h1 className="text-5xl font-black text-gray-900 mb-8 tracking-tighter italic">FinTrack</h1>
           <button onClick={handleLogin} className="group relative w-full bg-gray-900 text-white py-5 rounded-[1.5rem] font-bold text-xl overflow-hidden active:scale-95 shadow-2xl cursor-pointer transition-all">
-            <span className="relative z-10">Sign Up/Login</span>
+            <span className="relative z-10">Continue with Google</span>
             <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           </button>
         </div>
@@ -139,7 +139,8 @@ function App() {
         <div className="flex flex-col xl:flex-row gap-6">
           {/* Expenditure Card */}
           <div className={`relative overflow-hidden flex-1 p-10 rounded-[3rem] text-white shadow-2xl transition-all duration-700 ${percentageUsed > 80 ? 'bg-rose-500' : 'bg-blue-600'}`}>
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-70 mb-3 font-mono">Expenditure vs Remaining</p>
+            {/* INCREASED FONT SIZE: text-sm font-black */}
+            <p className="text-sm font-black uppercase tracking-[0.3em] opacity-90 mb-3 font-mono">Expenditure vs Remaining</p>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-8">
               <h2 className="text-5xl sm:text-6xl font-black tracking-tighter drop-shadow-xl">₹{totalSpent.toLocaleString('en-IN')}</h2>
               <div className="flex flex-col items-center gap-2">
@@ -150,12 +151,14 @@ function App() {
                  </div>
               </div>
             </div>
+            {/* RESTORED: Real-time Percentage Bar */}
             <div className="w-full bg-white/20 rounded-full h-4 p-1 shadow-inner">
               <div className="bg-white h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(percentageUsed, 100)}%` }}></div>
             </div>
+            <p className="mt-3 font-black text-xs opacity-90 tracking-widest uppercase">{percentageUsed.toFixed(1)}% USED</p>
           </div>
 
-          {/* Budget Target Card with Validation Message */}
+          {/* Budget Target Card */}
           <div className="w-full xl:w-[350px] bg-white p-8 rounded-[3rem] border border-gray-100 shadow-lg flex flex-col justify-center">
             <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Budget Target</h3>
             <div className="flex items-center gap-3">
@@ -178,6 +181,7 @@ function App() {
           </div>
         </div>
 
+        {/* ... (Rest of the code: Form, Visual Split, Activity remains the same) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <form onSubmit={saveExpense} className="bg-white border border-gray-100 p-8 sm:p-10 rounded-[3.5rem] shadow-xl space-y-6">
             <div className="flex flex-col gap-2">
@@ -193,9 +197,6 @@ function App() {
                 onWheel={(e) => e.target.blur()} 
                 className="w-full p-8 rounded-[2rem] bg-gray-50 text-4xl font-black outline-none text-gray-900 ring-2 ring-gray-100 focus:ring-blue-100 transition-all" 
                />
-               {amount !== '' && parseFloat(amount) < 1 && (
-                 <p className="text-[9px] text-rose-500 font-bold uppercase mt-1 px-4">Value must be greater than 1</p>
-               )}
             </div>
             
             <div className="flex flex-col gap-2">
@@ -262,7 +263,7 @@ function App() {
                 <div className="flex items-center gap-4 text-left">
                   <div className={`w-2.5 h-2.5 rounded-full ${exp.isNeed ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
                   <div>
-                    <p className="font-black text-lg text-gray-800 tracking-tighter">{exp.category}</p>
+                    <p className="font-black text-lg text-gray-800 tracking-tighter italic">{exp.category}</p>
                     <p className="text-[9px] font-black text-gray-300 uppercase tracking-widest">
                       {exp.createdAt?.toDate().toLocaleDateString() || '...'}
                     </p>
