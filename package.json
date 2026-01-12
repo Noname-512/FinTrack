@@ -19,7 +19,8 @@
     "react-dom": "^19.2.0",
     "recharts": "^3.6.0",
     "tailwindcss": "^4.1.18",
-    "canvas-confetti":"^1.6.0"
+    "canvas-confetti":"^1.6.0",
+    "jspdf":"^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
