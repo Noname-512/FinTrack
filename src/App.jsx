@@ -434,17 +434,14 @@ function App() {
         <div className="absolute top-12 left-6 md:top-10 md:left-20 text-blue-200 transform -rotate-12 opacity-100 blur-[1px] animate-blob scale-75 md:scale-100 origin-top-left transition-transform duration-500">
             <PieIcon size={180} md:size={200} strokeWidth={1.5} />
         </div>
-        <div className="absolute top-1/2 left-4 md:left-10 -translate-y-1/2 text-indigo-300 transform -rotate-12 opacity-50 blur-[1px] animate-blob animation-delay-1000 scale-75 md:scale-100 transition-transform duration-500">
-             <IndianRupee size={140} strokeWidth={1.5} />
-        </div>
         <div className="absolute bottom-12 right-6 md:bottom-10 md:right-20 text-emerald-200 transform rotate-6 opacity-100 blur-[1px] animate-blob animation-delay-2000 scale-75 md:scale-100 origin-bottom-right transition-transform duration-500">
-            <TrendingUp size={160} md:size={220} strokeWidth={1.5} />
+            <IndianRupee size={160} md:size={220} strokeWidth={1.5} />
         </div>
         <div className="absolute top-20 right-8 md:top-20 md:right-[10%] text-amber-200 transform rotate-20 opacity-100 blur-[2px] animate-blob animation-delay-4000 scale-50 md:scale-100 origin-top-right transition-transform duration-500">
             <Coins size={160} strokeWidth={1.5} />
         </div>
         <div className="absolute bottom-20 left-8 md:bottom-20 md:left-[10%] text-purple-200 transform -rotate-6 opacity-100 blur-[2px] scale-50 md:scale-100 origin-bottom-left transition-transform duration-500">
-            <Target size={170} strokeWidth={1.5} />
+            <TrendingUp size={170} strokeWidth={1.5} />
         </div>
 
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white rounded-full blur-3xl opacity-60 z-0"></div>
