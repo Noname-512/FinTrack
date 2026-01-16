@@ -832,9 +832,14 @@ export default function App() {
 
             {/* profile */}
             <img
-              src={user?.photoURL}
+              src={user?.photoURL || "https://ui-avatars.com/api/?name=User&background=10b981&color=fff"}
               alt="User"
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-emerald-400"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://ui-avatars.com/api/?name=User&background=10b981&color=fff";
+              }}
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-emerald-400 object-cover"
             />
 
             {/* logout icon only on mobile, full text on desktop */}
@@ -853,23 +858,47 @@ export default function App() {
       {/* ✅ Mobile Streak Bar */}
       <div className="sm:hidden px-5 pt-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between rounded-2xl bg-white/5 border border-white/10 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-orange-500/15 border border-orange-500/20">
-                <Flame size={16} className="text-orange-400" />
+          <div
+            className={`flex items-center justify-between rounded-2xl px-4 py-3 border ${
+              theme === "dark"
+                ? "bg-white/5 border-white/10"
+                : "bg-white border-slate-200 shadow-sm"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`p-2 rounded-xl border ${
+                  theme === "dark"
+                    ? "bg-orange-500/15 border-orange-500/20"
+                    : "bg-orange-50 border-orange-200"
+                }`}
+              >
+                <Flame
+                  size={16}
+                  className={theme === "dark" ? "text-orange-400" : "text-orange-600"}
+                />
               </div>
 
               <div>
-                <p className="text-[10px] uppercase tracking-[0.35em] font-black text-white/45">
+                <p
+                  className={`text-[10px] uppercase tracking-[0.35em] font-black ${
+                    theme === "dark" ? "text-white/45" : "text-slate-500"
+                  }`}
+                >
                   Streak
                 </p>
+
                 <p className="font-black text-lg leading-none">
                   {getStreak()} Days
                 </p>
               </div>
             </div>
 
-            <div className="text-[12px] font-black uppercase tracking-[0.15em] text-white/60">
+            <div
+              className={`text-[10px] font-black uppercase tracking-[0.28em] ${
+                theme === "dark" ? "text-white/40" : "text-slate-400"
+              }`}
+            >
               Keep tracking daily
             </div>
           </div>
